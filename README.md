@@ -147,7 +147,9 @@ SPECIES_LCAO_STATES :  3
 
 ## Workflow
 
-To create supercells for CASTEP inputs we need *cif2cell*. We can install it on a given supercluster as follows:  
+### CELL files with cif2cell
+
+CASTEP requires the structures as `.cell` files. To create `.cell` files from `.cif` files we need to use [[cif2cell]] [(see on GitHub)](https://github.com/torbjornbjorkman/cif2cell). We can install it on a given supercluster as follows:  
 ```shell
 # gcc is needed to compile, load it if not ready
 module load gcc
@@ -157,4 +159,11 @@ source ./.venv/bin/activate
 # Install cif2cell
 pip install cif2cell
 ```
+
+We can create a supercell in the process of converting the file, adding an extra argument where `k,l,m` is the supercell size. The output name is specified with the `-o` tag.  
+```bash
+cif2cell TEST.cif -p castep --supercell=[k,l,m] -o TEST.cell
+```
+
+To batch convert many `.cell` inputs in one go using cif2cell, see [InputMaker](https://github.com/pablogila/InputMaker).
 
