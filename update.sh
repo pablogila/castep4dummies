@@ -7,9 +7,8 @@ date=$(date +"%Y-%m-%d %H:%M:%S")
 original="/home/pablo/Documents/obsidian/Work ⚛️/Instruments/CASTEP.md"
 final="README.md"
 
-if diff $original $final >/dev/null; then
-    # If the files are the same, show a message and exit
-    zenity --info --text="No changes detected. Exiting..." --timeout=2 --no-wrap --title="castep4dummies update"
+if diff -q "$original" "$final" >/dev/null; then
+    zenity --warning --text="No changes detected. Exiting..." --timeout=2 --no-wrap --title="castep4dummies update"
     exit 0
 fi
 
@@ -22,7 +21,7 @@ git add .
 git commit -m "Automatic update from Obsidian Notes on $date"
 
 if [ $? -ne 0 ]; then
-    (zenity --warning --text="Git commit aborted! Did you modified the notes?" --no-wrap --title="castep4dummies update") &
+    (zenity --warning --text="Git commit aborted! Did you modified the notes?" --timeout=2 --no-wrap --title="castep4dummies update") &
     exit 2
 fi
 
