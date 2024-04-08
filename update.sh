@@ -8,7 +8,7 @@ cp "/home/pablo/Documents/obsidian/Work ⚛️/Instruments/CASTEP.md" README.md
 
 (zenity --info --text="CASTEP notes updated. Pushing to GitHub..." --timeout=1.5 --no-wrap --title="castep4dummies update") &
 
-sleep 1
+sleep 3
 
 git status
 git add .
