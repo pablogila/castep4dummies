@@ -7,7 +7,7 @@ original="/home/pablo/Documents/obsidian/Work ⚛️/Instruments/CASTEP.md"
 final="README.md"
 
 if diff -q "$original" "$final" >/dev/null; then
-    zenity --warning --text="No changes detected. Exiting..." --timeout=1 --no-wrap --title="castep4dummies update"
+    zenity --warning --text="No changes detected." --timeout=1 --no-wrap --title="castep4dummies update"
     exit 0
 fi
 
@@ -40,5 +40,5 @@ if [ $? -ne 0 ]; then
     exit 0
 fi
 
-(zenity --info --text="Done!  ✅" --timeout=1 --no-wrap --title="castep4dummies update") &
+(zenity --info --text="✅ Done!" --timeout=1 --no-wrap --title="castep4dummies update") &
 
