@@ -113,3 +113,6 @@ backup_interval t     (backup every t seconds)
 module load gcc
 venv
 pip install cif2cell
+
+
+TEST
