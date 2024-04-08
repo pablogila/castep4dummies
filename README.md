@@ -147,7 +147,14 @@ SPECIES_LCAO_STATES :  3
 
 ## Workflow
 
+To create supercells for CASTEP inputs we need *cif2cell*. We can install it on a given supercluster as follows:  
+```shell
+# gcc is needed to compile, load it if not ready
 module load gcc
-venv
+# Work in a Python virtual environment (seriously, do it)
+python3 -m venv .venv
+source ./.venv/bin/activate
+# Install cif2cell
 pip install cif2cell
+```
 
