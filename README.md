@@ -1,8 +1,13 @@
 # CASTEP
 
-[CASTEP](http://www.castep.org/) is a [[DFT]] software.
-The developers work in [[SCARF]], so it is usually updated there.
-To use it in [[Atlas]] we have to send an email to support asking them to install it, saying that our group has a license (It is convenient to put Pelayo from CC in that mail, who was the one who gave them the license). We would have to send them in the same mail the installation files, which are in the group Shared.
+[CASTEP](http://www.castep.org/) is a [[DFT]] software.  
+The developers work in [[SCARF]], so it is usually updated there.  
+To use it in clusters like [[Atlas]] we have ask support via email.    
+
+## Useful links
+- [CASTEP cell keywords and data blocks](https://www.tcm.phy.cam.ac.uk/castep/documentation/WebHelp/content/modules/castep/keywords/k_main_structure.htm)  
+- [The CASTEP Pseudopotential Library](https://www.ccpnc.ac.uk/pspot-site/)  
+
 
 CASTEP has two main ways of calculating the phonon frequencies/modes: **Density-Functional Perturbation Theory (DFPT)** and **Finite-Displacement (FD)**.
 There are different strategies depending on the problem:
@@ -100,9 +105,6 @@ backup_interval t     (backup every t seconds)
 
 
 
-## CASTEP inputs
-[CASTEP cell keywords and data blocks](https://www.tcm.phy.cam.ac.uk/castep/documentation/WebHelp/content/modules/castep/keywords/k_main_structure.htm)
-[The CASTEP Pseudopotential Library](https://www.ccpnc.ac.uk/pspot-site/)
 
 ### CELL file
 - `SPECIES_LCAO_STATES`: If Iodine is (Kr) 4d10 5s2 5p5 then it has value 3, etc.
@@ -113,5 +115,3 @@ backup_interval t     (backup every t seconds)
 module load gcc
 venv
 pip install cif2cell
-
-l
