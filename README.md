@@ -1,10 +1,10 @@
 # CASTEP
 
-## Quick intro
+## Intro
 
-[CASTEP](http://www.castep.org/) is a [[DFT]] software.  
-The developers work in [[SCARF]], so it is usually updated there.  
-To use it in clusters like [[Atlas]] we have ask support via email.    
+This is a summary of the [CASTEP](http://www.castep.org/) software for [[DFT]] calculations. These notes can be consulted on [GitHub](https://github.com/pablogila/castep4dummies).  
+CASTEP developers work in [[SCARF]], so it is usually updated there.  
+To use it in clusters like [[Atlas]] we have to ask support via email.  
 
 CASTEP has two main ways of calculating the phonon frequencies/modes: **Density-Functional Perturbation Theory (DFPT)** and **Finite-Displacement (FD)**.  
 There are different strategies depending on the problem:  
@@ -17,32 +17,30 @@ CASTEP takes advantage of the space-group symmetries of the crystal to compute:
 - Q-points needed in the 1st Brillouin zone for interpolation  
 - Electronic k-points...  
 
-## Useful links
+### Useful links
 
 - [CASTEP cell keywords and data blocks](https://www.tcm.phy.cam.ac.uk/castep/documentation/WebHelp/content/modules/castep/keywords/k_main_structure.htm)  
 - [The CASTEP Pseudopotential Library](https://www.ccpnc.ac.uk/pspot-site/)  
 
-## Inputs
+## General inputs
 
-Keywords that are GENERALLY reasonable:  
-
+Keywords that are generally reasonable:  
 ```castep
-grid_scale :             1.75
-fine_grid_scale :        4.0
-finite_basis_corr :      2
-mixing_scheme :          Pulay
-mix_charge_amp :         0.500000000000000
-mix_charge_gmax :        1.500000000000000
-mix_history_length :     20
-relativistic_treatment : Koelling-Harmon
-fixed_npw :              false
-
+grid_scale :              1.75
+fine_grid_scale :         4.0
+finite_basis_corr :       2
+mixing_scheme :           Pulay
+mix_charge_amp :          0.500000000000000
+mix_charge_gmax :         1.500000000000000
+mix_history_length :      20
+relativistic_treatment :  Koelling-Harmon
+fixed_npw :               false
 # To output a cell file with optimized geometry, avoiding copying it from geom:
-WRITE_CELL_STRUCTURE :   true
-WRITE_CIF_STRUCTURE :    true
+WRITE_CELL_STRUCTURE :    true
+WRITE_CIF_STRUCTURE :     true
 ```
 
-### Geometry optimization
+## Geometry optimization
 
 A high-precision geometry optimization is required. If coordinates are not converged with forces close to zero, phonons will have imaginary frequencies, which are represented in the outputs with negative values.  
 
@@ -58,19 +56,22 @@ The following listed quantities should be converged by systematically variating 
 
 Other helpful Keywords:  
 ```castep
-geom_max_iter : 9999
-geom_method :   lbfgs
+geom_max_iter :  9999
+geom_method :    lbfgs
 ```
 
-### Phonon calculations
+## Phonon calculations
 
-- DFPT (In the `.param` file)  
+### DFPT
+
+DFPT (In the `.param` file)  
 ```param
 task = phonon
 phonon_method = dfpt  # Default value
 phonon_max_cycles = ...
 ```
-- Fourier interpolation:
+
+Fourier interpolation:  
 ```param
 phonon_fine_method = interpolate
 phonon_kpoint_mp_grid p q r
@@ -83,63 +84,70 @@ phonon_fine_kpoint_path
 kpoints_mp_spacing ...
 phonon_force_constant_cutoff  # lower than max-box-dimension/2
 ```
+### FD
 
-- FD (in `.param`)
+FD (in `.param`)  
 ```param
 phonon_method = finite_displacement
 phonon_fine_method = interpolation
 phonon_kpoint_mp_grid p q r  # CASTEP will produce the supercell, no need to provide it for geometry optimization
 phonon_force_constant_cutoff  # < min(p*L1,q*L2,r*L3), where Lx are the lengths of the simulation box specified in .cell
 ```
-- FD SUPERCELL (in `.param`):
+
+FD SUPERCELL (in `.param`):  
 ```param
 phonon_method = finite_displacement
 phonon_fine_method : supercell
 ```
-- FD SUPERCELL (in `.cell`):
+
+FD SUPERCELL (in `.cell`):  
 ```cell
 supercell_kpoint_list
 ```
 
-Helpful Keywords:
+### Helpful keywords
 
-calculate_stress : true
-popn_calculate : false    #population analysis on the final ground state
-phonon_sum_rule_method : reciprocal  #check that the acoustic sum rule for phonons is valid
-phonon_calc_lo_to_splitting : true
-born_charge_sum_rule : true
-phonon_energy_tol : sqrt(elec_energy_tol of geomopt)
-efield_max_cycles : 250
-phonon_max_cycles : 100
-bs_max_iter : 250       #Max iterations to compute band-structure
-bs_max_cg_steps : 25     #Number of conjugate gradient steps taken for each electronic band in the electronic minimizer before resetting to the steepest descent direction, during a band structure calculation
-bs_eigenvalue_tol : 1.0e-9
-[add to .cell the following] 
+```
+calculate_stress :             true
+# Population analysis on the final ground state:
+popn_calculate :               false
+# Check that the acoustic sum rule for phonons is valid:
+phonon_sum_rule_method :       reciprocal
+phonon_calc_lo_to_splitting :  true
+born_charge_sum_rule :         true
+phonon_energy_tol :            sqrt(elec_energy_tol of geomopt)
+efield_max_cycles :            250
+phonon_max_cycles :            100
+# Max iterations to compute band-structure:
+bs_max_iter :                  250
+# During a band structure calculation, number of conjugate gradient steps taken for each electronic band in the electronic minimizer before resetting to the steepest descent direction:
+bs_max_cg_steps :              25
+bs_eigenvalue_tol :            1.0e-9
+```
+
+For room pressure, add to .cell the following:  
+```cell
 %BLOCK EXTERNAL_PRESSURE
     0.0001013000    0.0000000000    0.0000000000
                     0.0001013000    0.0000000000
                                     0.0001013000
 %ENDBLOCK EXTERNAL_PRESSURE
+```
 
-
-
-ALWAYS SAVE PARTIAL CALCULATIONS IN .check BY SETTING IN .param:
+**Always** save partial calculations in the `.check` file with the following settings in `.param`:  
+```param
 num_backup_iter n     (backup every n Q-vectors)
 backup_interval t     (backup every t seconds)
+```
 
-
-
-
-
-
-
-
-### CELL file
-- `SPECIES_LCAO_STATES`: If Iodine is (Kr) 4d10 5s2 5p5 then it has value 3, etc.
-
+In the `.cell` file, `SPECIES_LCAO_STATES` refers to the number of subshells preceding the noble gas in the electronic configuration. For example, if the electronic structure of Iodine (I) corresponds to  **(Kr) *4d10 5s2 5p5***  it has value 3, etc. In that case,  
+```cell_example
+SPECIES_LCAO_STATES :  3
+```
 
 ## Workflow
 
 module load gcc
 venv
 pip install cif2cell
+
