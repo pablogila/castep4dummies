@@ -13,12 +13,12 @@ fi
 
 cp "$original" "$final"
 
-(zenity --info --text="README.md updated.\nPushing to GitHub..." --timeout=2 --no-wrap --title="castep4dummies update") &
+(zenity --info --text="README.md updated. \nPushing to GitHub..." --timeout=2 --no-wrap --title="castep4dummies update") &
 
 git fetch
 
 if [ $(git rev-list HEAD...origin/master --count) -ne 0 ]; then
-    (zenity --error --text="Changes were detected in the remote repository. Check it manually..." --no-wrap --title="castep4dummies update") &
+    (zenity --error --text="Changes detected in the remote repository. \nCheck it manually..." --no-wrap --title="castep4dummies update") &
     exit 0
 fi
 
@@ -28,7 +28,7 @@ git add .
 git commit -m "Automatic update from Obsidian on $date"
 
 if [ $? -ne 0 ]; then
-    (zenity --warning --text="Git commit failed. Check it manually..." --no-wrap --title="castep4dummies update") &
+    (zenity --error --text="Git commit failed. \nCheck it manually..." --no-wrap --title="castep4dummies update") &
     exit 0
 fi
 
@@ -36,7 +36,7 @@ git push
 
 # Check if the push was successful
 if [ $? -ne 0 ]; then
-    (zenity --error --text="Git push failed. Check it manually..." --no-wrap --title="castep4dummies update") &
+    (zenity --error --text="Git push failed. \nCheck it manually..." --no-wrap --title="castep4dummies update") &
     exit 0
 fi
 
