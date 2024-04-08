@@ -26,21 +26,23 @@ CASTEP takes advantage of the space-group symmetries of the crystal to compute:
 
 Keywords that are GENERALLY reasonable:  
 
-``` castep
-grid_scale :   1.75
-fine_grid_scale :    4.0
-finite_basis_corr :   2
-mixing_scheme : Pulay
-mix_charge_amp :        0.500000000000000
+```castep
+grid_scale :             1.75
+fine_grid_scale :        4.0
+finite_basis_corr :      2
+mixing_scheme :          Pulay
+mix_charge_amp :         0.500000000000000
 mix_charge_gmax :        1.500000000000000
-mix_history_length :       20
+mix_history_length :     20
 relativistic_treatment : Koelling-Harmon
-fixed_npw : false
-WRITE_CELL_STRUCTURE : true  # Outputs a cell file with optimized geometry, to avoid copying it from geom...
-WRITE_CIF_STRUCTURE : true
+fixed_npw :              false
+
+# To output a cell file with optimized geometry, avoiding copying it from geom:
+WRITE_CELL_STRUCTURE :   true
+WRITE_CIF_STRUCTURE :    true
 ```
 
-### Geometry Optimization
+### Geometry optimization
 
 A high-precision geometry optimization is required. If coordinates are not converged with forces close to zero, phonons will have imaginary frequencies, which are represented in the outputs with negative values.  
 
@@ -54,34 +56,53 @@ The following listed quantities should be converged by systematically variating 
 - **Ionic displacement.** (`5e-6` A)  
 - **Stress.** (`2.5e-3` GPa)  
 
-Helpful Keywords:
-geom_max_iter :  9999
-geom_method :  lbfgs
+Other helpful Keywords:  
+```castep
+geom_max_iter : 9999
+geom_method :   lbfgs
+```
 
+### Phonon calculations
 
-PHONON CALCULATIONS:
-    - DFPT (in .param): 
-    task = phonon
-    phonon_method = dfpt    (DEFAULT VALUE) 
-    phonon_max_cycles = ....    ()   
-    Fourier interpolation (in .param): 
-        phonon_fine_method = interpolate
-        phonon_kpoint_mp_grid p q r
-        ALWAYS INCLUDE Γ: phonon_fine_kpoint_mp_offset 1/2p 1/2q 1/2r    for even phonon_kpoint_mp_grid parameters
-        phonon_fine_kpoint_path        to specify Q-path in the .cell file 
-        [alternative to choosing specific set of Q] kpoints_mp_spacing ....    to specify the density of Brillouin-zone sampling 
-        phonon_force_constant_cutoff      lower than max-box-dimension/2
-    - FD (in .param):
-    phonon_method = finite_displacement
-    phonon_fine_method = interpolation
-    phonon_kpoint_mp_grid p q r (CASTEP WILL PRODUCE THE SUPERCELL, NO NEED TO PROVIDE IT FOR GEO OPT)
-    phonon_force_constant_cutoff   < min(p*L1,q*L2,r*L3), where Lx are the lengths of the simulation box specified in .cell
-    - FD SUPERCELL (in .param):
-    phonon_method = finite_displacement
-    phonon_fine_method : supercell
-    - FD SUPERCELL (in .cell):
-    supercell_kpoint_list
+- DFPT (In the `.param` file)  
+```param
+task = phonon
+phonon_method = dfpt  # Default value
+phonon_max_cycles = ...
+```
+- Fourier interpolation:
+```param
+phonon_fine_method = interpolate
+phonon_kpoint_mp_grid p q r
+# ALWAYS INCLUDE Γ
+# For EVEN phonon_kpoint_mp_grid parameters:
+phonon_fine_kpoint_mp_offset 1/2p 1/2q 1/2r
+# To specify Q-path in the .cell file:
+phonon_fine_kpoint_path
+# To specify the density of Brillouin-zone sampling (alternative to choosing specific set of Q):
+kpoints_mp_spacing ...
+phonon_force_constant_cutoff  # lower than max-box-dimension/2
+```
+
+- FD (in `.param`)
+```param
+phonon_method = finite_displacement
+phonon_fine_method = interpolation
+phonon_kpoint_mp_grid p q r  # CASTEP will produce the supercell, no need to provide it for geometry optimization
+phonon_force_constant_cutoff  # < min(p*L1,q*L2,r*L3), where Lx are the lengths of the simulation box specified in .cell
+```
+- FD SUPERCELL (in `.param`):
+```param
+phonon_method = finite_displacement
+phonon_fine_method : supercell
+```
+- FD SUPERCELL (in `.cell`):
+```cell
+supercell_kpoint_list
+```
+
 Helpful Keywords:
+
 calculate_stress : true
 popn_calculate : false    #population analysis on the final ground state
 phonon_sum_rule_method : reciprocal  #check that the acoustic sum rule for phonons is valid
@@ -99,6 +120,7 @@ bs_eigenvalue_tol : 1.0e-9
                     0.0001013000    0.0000000000
                                     0.0001013000
 %ENDBLOCK EXTERNAL_PRESSURE
+
 
 
 ALWAYS SAVE PARTIAL CALCULATIONS IN .check BY SETTING IN .param:
