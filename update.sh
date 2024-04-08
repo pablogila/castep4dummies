@@ -6,7 +6,7 @@ date=$(date +"%Y-%m-%d %H:%M:%S")
 
 cp "/home/pablo/Documents/obsidian/Work ⚛️/Instruments/CASTEP.md" README.md
 
-(zenity --info --text="CASTEP notes updated from Obsidian. Pushing to GitHub..." --timeout=1 --no-wrap --title="castep4dummies update") &
+(zenity --info --text="CASTEP notes updated. Pushing to GitHub..." --timeout=1 --no-wrap --title="castep4dummies update") &
 
 git status
 git add .
