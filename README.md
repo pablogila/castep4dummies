@@ -1,26 +1,31 @@
 # CASTEP
 
+## Quick intro
+
 [CASTEP](http://www.castep.org/) is a [[DFT]] software.  
 The developers work in [[SCARF]], so it is usually updated there.  
 To use it in clusters like [[Atlas]] we have ask support via email.    
 
+CASTEP has two main ways of calculating the phonon frequencies/modes: **Density-Functional Perturbation Theory (DFPT)** and **Finite-Displacement (FD)**.  
+There are different strategies depending on the problem:  
+- Primitive cell FD at Γ point  
+- Supercell FD for any Q (using traditional, like phonopy, or non-diagonal with Fourier interpolation schemes)  
+- DFPT on MP grid of Q with Fourier interpolation to arbitrary fine set of Q  
+
+CASTEP takes advantage of the space-group symmetries of the crystal to compute:  
+- ONLY symmetry-independent elements of the dynamical matrix  
+- Q-points needed in the 1st Brillouin zone for interpolation  
+- Electronic k-points...  
+
 ## Useful links
+
 - [CASTEP cell keywords and data blocks](https://www.tcm.phy.cam.ac.uk/castep/documentation/WebHelp/content/modules/castep/keywords/k_main_structure.htm)  
 - [The CASTEP Pseudopotential Library](https://www.ccpnc.ac.uk/pspot-site/)  
 
+## Inputs
 
-CASTEP has two main ways of calculating the phonon frequencies/modes: **Density-Functional Perturbation Theory (DFPT)** and **Finite-Displacement (FD)**.
-There are different strategies depending on the problem:
-- Primitive cell FD at Γ point
-- Supercell FD for any Q (using traditional, like phonopy, or non-diagonal with Fourier interpolation schemes)
-- DFPT on MP grid of Q with Fourier interpolation to arbitrary fine set of Q 
+Keywords that are GENERALLY reasonable:  
 
-CASTEP takes advantage of the space-group symmetries of the crystal to compute:
-- ONLY symmetry-independent elements of the dynamical matrix
-- Q-points needed in the 1st Brillouin zone for interpolation
-- Electronic k-points...
-
-Keywords that are GENERALLY reasonable:
 ``` castep
 grid_scale :   1.75
 fine_grid_scale :    4.0
@@ -35,19 +40,20 @@ WRITE_CELL_STRUCTURE : true  # Outputs a cell file with optimized geometry, to a
 WRITE_CIF_STRUCTURE : true
 ```
 
-GEOMETRY OPTIMIZATION: 
-A high-precision geometry optimization is required.
-If coordinates are not converged with forces close to zero, phonons will have imaginary frequencies.
-The above requires a high level of convergence of the following quantities:
-    1. Plane wave cutoff (usually the larger the better, but can be worth to check)
-    2. SCF convergence (elec_energy_tol in the geo opt should be at least phonon_energy_tol^2 [Kacper/Pelayo: 1e-12 and 1e-6 respectively and max_scf_cycles 100]. CRITICAL IN DFPT)
-    3. Brillouin-zone sampling (under-convergence gives poor acoustic mode dispersion as q->0; user finer grids for FD method)
-    4. Free energy per atom (Kacper/Pelayo: 1e-10 eV/atom)
-    5. Ionic forces (Kacper/Pelayo: 1e-5 eV/A)
-    6. Ionic displacement (Kacper/Pelayo: 5e-6 A)
-    7. Stress (Kacper/Pelayo: 2.5e-3 GPa)
-The convergence of each parameter must be determined by systematically variating each quantity. 
-The values of Kacper/Pelayo are optimal for perovskites, but other systems may require further job.
+### Geometry Optimization
+
+A high-precision geometry optimization is required. If coordinates are not converged with forces close to zero, phonons will have imaginary frequencies, which are represented in the outputs with negative values.  
+
+The following listed quantities should be converged by systematically variating each one. Values in parenthesis were used by Kacper and Pelayo, and are optimized for perovskites. Other systems may require further job.  
+
+- **Plane wave cutoff.** Usually the larger the better.  
+- **SCF convergence.** This is critical in **DFPT**. *elec_energy_tol* should be at least *phonon_energy_tol^2* (`elec_energy_tol : 1e-12` and `phonon_energy_tol : 1e-6` respectively. Also, `max_scf_cycles : 100`).  
+- **Brillouin-zone sampling.** Under-convergence results in a poor acoustic mode dispersion as q->0. Use finer grids for **FD** method.  
+- **Free energy per atom.** (`1e-10` eV/atom)  
+- **Ionic forces.** (`1e-5` eV/A)  
+- **Ionic displacement.** (`5e-6` A)  
+- **Stress.** (`2.5e-3` GPa)  
+
 Helpful Keywords:
 geom_max_iter :  9999
 geom_method :  lbfgs
