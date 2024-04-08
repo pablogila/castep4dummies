@@ -13,7 +13,7 @@ fi
 
 cp "$original" "$final"
 
-(zenity --info --text="README.md updated. Pushing to GitHub..." --timeout=1 --no-wrap --title="castep4dummies update") &
+(zenity --info --text="README.md updated.\nPushing to GitHub..." --timeout=2 --no-wrap --title="castep4dummies update") &
 
 git fetch
 
