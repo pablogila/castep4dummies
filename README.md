@@ -115,9 +115,3 @@ venv
 pip install cif2cell
 
 
-TEST
-af
-s
-
-fsadgadjhvhkgdfsahgv
-l

@@ -2,36 +2,43 @@
 
 #!/bin/bash
 
-date=$(date +"%Y-%m-%d %H:%M:%S")
-
+date=$(date +"%Y-%m-%d %H:%M")
 original="/home/pablo/Documents/obsidian/Work ⚛️/Instruments/CASTEP.md"
 final="README.md"
 
 if diff -q "$original" "$final" >/dev/null; then
-    zenity --warning --text="No changes detected. Exiting..." --timeout=2 --no-wrap --title="castep4dummies update"
+    zenity --warning --text="No changes detected. Exiting..." --timeout=1 --no-wrap --title="castep4dummies update"
     exit 0
 fi
 
 cp "$original" "$final"
 
-(zenity --info --text="CASTEP notes updated. Pushing to GitHub..." --timeout=2 --no-wrap --title="castep4dummies update") &
+(zenity --info --text="README.md updated. Pushing to GitHub..." --timeout=1 --no-wrap --title="castep4dummies update") &
+
+git fetch
+
+if [ $(git rev-list HEAD...origin/master --count) -ne 0 ]; then
+    (zenity --error --text="Changes were detected in the remote repository. Check it manually..." --no-wrap --title="castep4dummies update") &
+    exit 0
+fi
 
 git status
 git add .
-git commit -m "Automatic update from Obsidian Notes on $date"
+
+git commit -m "Automatic update from Obsidian on $date"
 
 if [ $? -ne 0 ]; then
-    (zenity --warning --text="Git commit aborted! Did you modified the notes?" --timeout=2 --no-wrap --title="castep4dummies update") &
-    exit 2
+    (zenity --warning --text="Git commit failed. Check it manually..." --no-wrap --title="castep4dummies update") &
+    exit 0
 fi
 
 git push
 
 # Check if the push was successful
 if [ $? -ne 0 ]; then
-    (zenity --warning --text="Git push failed..." --timeout=2 --no-wrap --title="castep4dummies update") &
-    exit 2
+    (zenity --error --text="Git push failed. Check it manually..." --no-wrap --title="castep4dummies update") &
+    exit 0
 fi
 
-(zenity --info --text="Done!  :D" --timeout=1 --no-wrap --title="castep4dummies update") &
+(zenity --info --text="Done!  ✅" --timeout=1 --no-wrap --title="castep4dummies update") &
 
