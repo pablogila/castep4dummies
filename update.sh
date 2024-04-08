@@ -13,7 +13,7 @@ git add .
 git commit -m "Automatic update from Obsidian Notes on $date"
 
 if [ $? -ne 0 ]; then
-    (zenity --error --text="Git commit aborted! Did you really modified the notes?" --no-wrap --title="castep4dummies update") &
+    (zenity --error --text="Git commit aborted! Did you modified the notes?" --no-wrap --title="castep4dummies update") &
     exit 2
 fi
 
