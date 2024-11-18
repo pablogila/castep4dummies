@@ -4,7 +4,7 @@
 
 This is a summary of the [CASTEP](http://www.castep.org/) software for [[DFT]] calculations. These notes can be consulted on [GitHub](https://github.com/pablogila/castep4dummies).  
 CASTEP developers work in [[SCARF]], so it is usually updated there.  
-To use it in clusters like [[Atlas]] we have to ask support via email.  
+To use it in clusters like [[Atlas & Hyperion]] we have to ask support via email.  
 
 CASTEP has two main ways of calculating the phonon frequencies/modes: **Density-Functional Perturbation Theory (DFPT)** and **Finite-Displacement (FD)**.  
 There are different strategies depending on the problem:  
