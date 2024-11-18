@@ -1,11 +1,11 @@
-# This script copies my current Obsidian notes on CASTEP as the README.md file, and pushes to GitHub.
-
+# This script copies my current Obsidian notes as the README.md file, and pushes to GitHub.
 #!/bin/bash
 
-date=$(date +"%Y-%m-%d %H:%M")
+version="v2024.11.18"
 original="/home/pablo/Documents/obsidian/Work ⚛️/Instruments/CASTEP.md"
 final="README.md"
 title="castep4dummies update"
+date=$(date +"%Y-%m-%d %H:%M")
 
 if diff -q "$original" "$final" >/dev/null; then
     zenity --warning --text="No changes detected." --timeout=1 --no-wrap --title="$title"
@@ -16,6 +16,7 @@ cp "$original" "$final"
 
 (zenity --info --text="README.md updated. \nPushing to GitHub..." --timeout=1 --no-wrap --title="$title") &
 
+# Check if the repo is updated
 git fetch
 
 if [ $(git rev-list HEAD...origin/master --count) -ne 0 ]; then
@@ -25,8 +26,7 @@ fi
 
 git status
 git add .
-
-git commit -m "Automatic update from Obsidian on $date"
+git commit -m "Automatic update from Obsidian on $date with $version"
 
 if [ $? -ne 0 ]; then
     (zenity --error --text="Git commit failed. \nCheck it manually..." --no-wrap --title="$title") &
